@@ -6,7 +6,10 @@
 
 var app = require('../app');
 var debug = require('debug')('bx24approvalbot:server');
-var http = require('http');
+var https = require('https');
+const fs = require('fs');
+
+require("dotenv").config();
 
 /**
  * Get port from environment and store in Express.
@@ -19,7 +22,12 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+const options = {
+  key: fs.readFileSync('/etc/ssl/bx24in.space/private.key'),
+  cert: fs.readFileSync('/etc/ssl/bx24in.space/bx24in.space.crt')
+};
+
+const server = https.createServer(options, app);
 
 /**
  * Listen on provided port, on all network interfaces.
