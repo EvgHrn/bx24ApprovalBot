@@ -37,6 +37,26 @@ app.use(async (req, res, next) => {
         );
         console.log("Register bot responese: ", result);
         break;
+      case "ONIMBOTMESSAGEADD":
+        // check the event - authorize this event or not
+        if (!bitrix.checkAuth(req.body["auth"]["application_token"])) {
+          console.log("Unauthorize event: ", req.body.event);
+          return false;
+        }
+        console.log("ONIMBOTMESSAGEADD event with body: ", req.body); 
+        const message = req.body["data"]["PARAMS"]["MESSAGE"];
+        const interestedUsers = bitrix.getInterestedUsers();
+        if (interestedUsers.length === 1 && interestedUsers[0] === "1819") {
+          console.log("Interested group error. Use only 1819");
+          result = await bitrix.sendMessage(
+            req.body["data"]["PARAMS"]["FROM_USER_ID"],
+            `Ошибка группы пользователей`,
+            req.body["auth"],
+          );
+        }
+        //236654 Ижевск Иван Святогоров сублимационная футболка Гэгэкси
+        const orderNumber = message.match(/^\d{3}\s?\d{3}(?=\s)/gm)[0];
+        break;
       default:
         break;
     }

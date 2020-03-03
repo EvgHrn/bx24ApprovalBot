@@ -7,52 +7,52 @@ const adapter = new FileSync("db.json");
 const dblow = low(adapter);
 
 class Db {
-  static getSupportUsers = () => {
+  static getInterestedUsers = () => {
     try {
       dblow.read();
-      const supportUsers = dblow.getState().supportUsers;
-      if (supportUsers === undefined) return false;
-      return supportUsers;
+      const interestedUsers = dblow.getState().interestedUsers;
+      if (interestedUsers === undefined) return false;
+      return interestedUsers;
     } catch (err) {
       return false;
     }
 	};
 	
-  static addSupportUser = (user) => {
+  static addInterestedUser = (user) => {
     if (!user) return false;
-    let supportUsers;
+    let interestedUsers;
     try {
       dblow.read();
-      supportUsers = dblow.getState().supportUsers;
-      if (supportUsers === undefined) {
-        supportUsers = ["1819"];
+      interestedUsers = dblow.getState().interestedUsers;
+      if (interestedUsers === undefined) {
+        interestedUsers = ["1819"];
       }
-      supportUsers.push(user);
-      dblow.set("supportUsers", supportUsers).write();
-      const savedSupportUsers = this.getSupportUsers();
-      if (savedSupportUsers === false) return false;
-      return savedSupportUsers;
+      interestedUsers.push(user);
+      dblow.set("interestedUsers", interestedUsers).write();
+      const savedInterestedUsers = this.getInterestedUsers();
+      if (savedInterestedUsers === false) return false;
+      return savedInterestedUsers;
     } catch (err) {
       return false;
     }
   };
 
-  static deleteSupportUser = (user) => {
+  static deleteInterestedUser = (user) => {
     if (!user) return false;
-    let supportUsers;
+    let interestedUsers;
     try {
       dblow.read();
-      supportUsers = dblow.getState().supportUsers;
-      if (supportUsers === undefined) {
+      interestedUsers = dblow.getState().interestedUsers;
+      if (interestedUsers === undefined) {
         return false;
       }
-      supportUsers = supportUsers.filter(
-        supportUser => supportUser !== user,
+      interestedUsers = interestedUsers.filter(
+        interestedUser => interestedUser !== user,
       );
-      dblow.set("supportUsers", supportUsers).write();
-      const savedSupportUsers = this.getSupportUsers();
-      if (savedSupportUsers === false) return false;
-      return savedSupportUsers;
+      dblow.set("interestedUsers", interestedUsers).write();
+      const interestedUsers = this.getInterestedUsers();
+      if (savedInterestedUsers === false) return false;
+      return savedInterestedUsers;
     } catch (err) {
       return false;
     }
@@ -92,7 +92,6 @@ class Db {
 		}
 		return configs;
 	};
-
 }
 
 module.exports = Db;

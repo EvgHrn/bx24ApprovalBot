@@ -6,54 +6,46 @@ require("dotenv").config();
 
 class Bitrix {
   constructor() {
-    // const supportGroup = ["1819", "1600", "3", "1480", "1588"];
-    // const supportGroup = ["1819"];
-		this.supportUsers = Db.getSupportUsers();
-		if (!this.supportUsers) {
-			this.supportUsers = ["1819"]; 
-			Db.addSupportUser("1819");
+    // const interestedUsers = ["1819", "1600", "3", "1480", "1588"];
+    // const interestedUsers = ["1819"];
+		this.interestedUsers = Db.getInterestedUsers();
+		if (!this.interestedUsers) {
+			this.interestedUsers = ["1819"]; 
+			Db.addInterestedUser("1819");
 		}
     this.configs = Db.getConfigs();
   }
 
-  getSupportUsers = () => {
-    if (this.supportUsers) {
-      return this.supportUsers;
+  getInterestedUsers = () => {
+    if (this.interestedUsers) {
+      return this.interestedUsers;
     } else {
-      //TODO send message about getSupportUsers error
+      //TODO send message about getInterestedUsers error
       return ["1819"];
     }
   };
 
-  addSupportUser = userIdStr => {
-    const result = Db.addSupportUser(userIdStr);
+  addInterestedUser = userIdStr => {
+    const result = Db.addInterestedUser(userIdStr);
     if (result) {
-      //TODO send message with new support users
-      this.supportUsers = result;
+      //TODO send message with new interested Users
+      this.interestedUsers = result;
     } else {
-      //TODO send message about addSupportUser error
+      //TODO send message about addInterestedUser error
     }
   };
 
-  deleteSupportUser = userIdStr => {
-    const result = Db.deleteSupportUser(userIdStr);
+  deleteInterestedUser = userIdStr => {
+    const result = Db.deleteInterestedUser(userIdStr);
     if (result) {
-      this.supportUsers = result;
-      //TODO send message with new support users
+      this.interestedUsers = result;
+      //TODO send message with new interested Users
     } else {
-      //TODO send message about addSupportUser error
+      //TODO send message about deleteInterestedUser error
     }
   };
 
   sendMessage = async (userId, msg, auth) => {
-    // const result = await restCommand(
-    //   "imbot.message.add",
-    //   {
-    //     DIALOG_ID: toUserId[0],
-    //     MESSAGE: `${req.body["data"]["USER"]["NAME"]} id${req.body["data"]["USER"]["ID"]}: ${req.body["data"]["PARAMS"]["MESSAGE"]}`,
-    //   },
-    //   req.body["auth"],
-    // );
     const result = await this.restCommand(
       "imbot.message.add",
       {
@@ -181,7 +173,7 @@ class Bitrix {
     result = await this.restCommand(
       "im.search.user.list",
       { FIND: departmentToSearch },
-      auth,
+      auth
     );
     return result.result;
 	};
