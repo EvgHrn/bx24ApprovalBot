@@ -69,102 +69,102 @@ class Bitrix {
     }
   };
 
-  registerBotAndCommands = async (token, auth) => {
+  registerBotAndCommands = async (name, birthday, token, auth) => {
     let result = await this.restCommand(
       "imbot.register",
       {
-        CODE: "Вопросы производству",
+        CODE: name,
         TYPE: "H",
         EVENT_MESSAGE_ADD: process.env.SERVER_HOST,
         EVENT_WELCOME_MESSAGE: process.env.SERVER_HOST,
         EVENT_BOT_DELETE: process.env.SERVER_HOST,
         PROPERTIES: {
-          NAME: "Вопросы производству",
+          NAME: name,
           COLOR: "GREEN",
           EMAIL: "evg.hrn@gmail.com",
-          PERSONAL_BIRTHDAY: "2020-02-26",
-          WORK_POSITION: "Вопросы производству",
+          PERSONAL_BIRTHDAY: birthday,
+          WORK_POSITION: name,
           PERSONAL_WWW: "http://bitrix24.com",
           PERSONAL_GENDER: "M",
           // "PERSONAL_PHOTO": avatar,
         },
       },
-      auth,
+      auth
     );
     const botId = result["result"];
-    result = await this.restCommand(
-      "imbot.command.register",
-      {
-        BOT_ID: botId,
-        COMMAND: "masssend",
-        COMMON: "Y",
-        HIDDEN: "N",
-        EXTRANET_SUPPORT: "N",
-        LANG: [
-          {
-            LANGUAGE_ID: "ru",
-            TITLE:
-              "Рассылка подразделению. Нельзя использовать тире в сообщении и названии подразделения",
-            PARAMS: "Подразделение-Сообщение",
-          },
-        ],
-        EVENT_COMMAND_ADD: process.env.SERVER_HOST,
-      },
-      auth,
-    );
-    const commandMassSend = result["result"];
+    // result = await this.restCommand(
+    //   "imbot.command.register",
+    //   {
+    //     BOT_ID: botId,
+    //     COMMAND: "masssend",
+    //     COMMON: "Y",
+    //     HIDDEN: "N",
+    //     EXTRANET_SUPPORT: "N",
+    //     LANG: [
+    //       {
+    //         LANGUAGE_ID: "ru",
+    //         TITLE:
+    //           "Рассылка подразделению. Нельзя использовать тире в сообщении и названии подразделения",
+    //         PARAMS: "Подразделение-Сообщение",
+    //       },
+    //     ],
+    //     EVENT_COMMAND_ADD: process.env.SERVER_HOST,
+    //   },
+    //   auth,
+    // );
+    // const commandMassSend = result["result"];
 
-    result = await this.restCommand(
-      "imbot.command.register",
-      {
-        BOT_ID: botId,
-        COMMAND: "addsupportuser",
-        COMMON: "Y",
-        HIDDEN: "N",
-        EXTRANET_SUPPORT: "N",
-        LANG: [
-          {
-            LANGUAGE_ID: "ru",
-            TITLE: "Добавить пользователя в группу поддержки",
-            PARAMS: "id пользователя",
-          },
-        ],
-        EVENT_COMMAND_ADD: process.env.SERVER_HOST,
-      },
-      auth,
-    );
+    // result = await this.restCommand(
+    //   "imbot.command.register",
+    //   {
+    //     BOT_ID: botId,
+    //     COMMAND: "addsupportuser",
+    //     COMMON: "Y",
+    //     HIDDEN: "N",
+    //     EXTRANET_SUPPORT: "N",
+    //     LANG: [
+    //       {
+    //         LANGUAGE_ID: "ru",
+    //         TITLE: "Добавить пользователя в группу поддержки",
+    //         PARAMS: "id пользователя",
+    //       },
+    //     ],
+    //     EVENT_COMMAND_ADD: process.env.SERVER_HOST,
+    //   },
+    //   auth,
+    // );
 
-    const commandAddSupportUser = result["result"];
+    // const commandAddSupportUser = result["result"];
 
-    result = await this.restCommand(
-      "imbot.command.register",
-      {
-        BOT_ID: botId,
-        COMMAND: "deletesupportuser",
-        COMMON: "Y",
-        HIDDEN: "N",
-        EXTRANET_SUPPORT: "N",
-        LANG: [
-          {
-            LANGUAGE_ID: "ru",
-            TITLE: "Удалить пользователя из группы поддержки",
-            PARAMS: "id пользователя",
-          },
-        ],
-        EVENT_COMMAND_ADD: process.env.SERVER_HOST,
-      },
-      auth,
-    );
+    // result = await this.restCommand(
+    //   "imbot.command.register",
+    //   {
+    //     BOT_ID: botId,
+    //     COMMAND: "deletesupportuser",
+    //     COMMON: "Y",
+    //     HIDDEN: "N",
+    //     EXTRANET_SUPPORT: "N",
+    //     LANG: [
+    //       {
+    //         LANGUAGE_ID: "ru",
+    //         TITLE: "Удалить пользователя из группы поддержки",
+    //         PARAMS: "id пользователя",
+    //       },
+    //     ],
+    //     EVENT_COMMAND_ADD: process.env.SERVER_HOST,
+    //   },
+    //   auth,
+    // );
 
-    const commandDeleteSupportUser = result["result"];
+    // const commandDeleteSupportUser = result["result"];
 
     // save params
     let newConfig = {};
     newConfig[token] = {
       BOT_ID: botId,
-      COMMAND_MASSSEND: commandMassSend,
-      COMMAND_ADDSUPPORTUSER: commandAddSupportUser,
-      COMMAND_DELETESUPPORTUSER: commandDeleteSupportUser,
+      // COMMAND_MASSSEND: commandMassSend,
+      // COMMAND_ADDSUPPORTUSER: commandAddSupportUser,
+      // COMMAND_DELETESUPPORTUSER: commandDeleteSupportUser,
       AUTH: auth,
     };
     Db.saveConfig(newConfig);

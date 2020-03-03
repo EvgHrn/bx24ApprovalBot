@@ -21,8 +21,33 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use(async (req, res, next) => {
+  if (req.body.event) {
+    let result;
+    // const configs = Db.getConfigs();
+    switch (req.body.event) {
+      case "ONAPPINSTALL":
+        console.log("ONAPPINSTALL event with body: ", req.body);
+        // register new bot
+        result = await bitrix.registerBotAndCommands(
+          "Согласование",
+          "2020-03-03",
+          req.body["auth"]["application_token"],
+          req.body["auth"],
+        );
+        console.log("Register bot responese: ", result);
+        break;
+      default:
+        break;
+    }
+  } else {
+    console.log("New unidentified request: ", req.body);
+  }
+  res.sendStatus(200);
+});
+
+// app.use('/', indexRouter);
+// app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
