@@ -4,8 +4,9 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const bodyParser = require("body-parser");
-const countryDetector = require("country-in-text-detector");
+// const countryDetector = require("country-in-text-detector");
 const Bitrix = require('./utils/bitrix');
+const cityArr = require('./utils/city');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -58,8 +59,10 @@ app.use(async (req, res, next) => {
           );
         }
         //236654 Ижевск Иван Святогоров сублимационная футболка
+        //TODO handle null result 
         const orderNumber = message.match(/^\d{3}\s?\d{3}(?=\s)/gm)[0];
-        const city = countryDetector.detect(`RU: ${message}`).name;
+        //TODO handle false result 
+        const city = findCity(message);
         console.log('Recognized order number: ', orderNumber);
         console.log('Recognized city: ', city);
         let regex = new RegExp(`(?<=${city}).*$`, "gm");
@@ -97,5 +100,14 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+const findCity = (str) => {
+  const filteredCityArr = cityArr.filter((city) => str.includes(city));
+  if(filteredCityArr.length === 1) {
+    return filteredCityArr[0];
+  } else {
+    return false;
+  }
+}
 
 module.exports = app;
