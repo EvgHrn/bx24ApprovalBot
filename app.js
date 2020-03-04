@@ -65,7 +65,7 @@ app.use(async (req, res, next) => {
         const managerStr = messageManagerAndProductStr.trim().match(/^\S*\s*\S*/gm)[0];
         console.log('Recognized manager: ', managerStr);
         regex = new RegExp(`(?<=${managerStr}).*`, "gm");
-        const product = messageManagerAndProductStr.trim().match(regex)[0];
+        const product = messageManagerAndProductStr.trim().match(regex)[0].trim();
         console.log('Recognized product: ', product);
         break;
       default:
