@@ -38,7 +38,7 @@ app.use(async (req, res, next) => {
           req.body["auth"]["application_token"],
           req.body["auth"],
         );
-        console.log("Register bot result: ", result.result | result);
+        console.log("Register bot result: ", result);
         break;
       case "ONIMBOTMESSAGEADD":
         // check the event - authorize this event or not
