@@ -5,11 +5,13 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const bodyParser = require("body-parser");
 const countryDetector = require("country-in-text-detector");
+const Bitrix = require('./utils/bitrix');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var app = express();
+const bitrix = new Bitrix();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -28,7 +30,7 @@ app.use(async (req, res, next) => {
     // const configs = Db.getConfigs();
     switch (req.body.event) {
       case "ONAPPINSTALL":
-        console.log("ONAPPINSTALL event with body: ", req.body);
+        console.log("ONAPPINSTALL event");
         // register new bot
         result = await bitrix.registerBotAndCommands(
           "Согласование",
@@ -36,7 +38,7 @@ app.use(async (req, res, next) => {
           req.body["auth"]["application_token"],
           req.body["auth"],
         );
-        console.log("Register bot responese: ", result);
+        console.log("Register bot result: ", result.result | result);
         break;
       case "ONIMBOTMESSAGEADD":
         // check the event - authorize this event or not
@@ -55,7 +57,7 @@ app.use(async (req, res, next) => {
             req.body["auth"],
           );
         }
-        //236654 Ижевск Иван Святогоров сублимационная футболка Гэгэкси
+        //236654 Ижевск Иван Святогоров сублимационная футболка
         const orderNumber = message.match(/^\d{3}\s?\d{3}(?=\s)/gm)[0];
         const city = countryDetector.detect(`RU: ${message}`).name;
         console.log('Recognized order number: ', orderNumber);
