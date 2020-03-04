@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const bodyParser = require("body-parser");
+const countryDetector = require("country-in-text-detector");
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -56,6 +57,16 @@ app.use(async (req, res, next) => {
         }
         //236654 Ижевск Иван Святогоров сублимационная футболка Гэгэкси
         const orderNumber = message.match(/^\d{3}\s?\d{3}(?=\s)/gm)[0];
+        const city = countryDetector.detect(`RU: ${message}`).name;
+        console.log('Recognized order number: ', orderNumber);
+        console.log('Recognized city: ', city);
+        let regex = new RegExp(`(?<=${city}).*$`, "gm");
+        const messageManagerAndProductStr = message.match(regex)[0];
+        const managerStr = messageManagerAndProductStr.trim().match(/^\S*\s*\S*/gm)[0];
+        console.log('Recognized manager: ', managerStr);
+        regex = new RegExp(`(?<=${managerStr}).*`, "gm");
+        const product = messageManagerAndProductStr.trim().match(regex)[0];
+        console.log('Recognized product: ', product);
         break;
       default:
         break;
