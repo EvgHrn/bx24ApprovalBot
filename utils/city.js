@@ -44,3 +44,5 @@ const city = [
 	"Челябинск",
 	"Ярославль"
 ];
+
+module.exports = city;
