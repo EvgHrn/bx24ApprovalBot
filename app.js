@@ -14,6 +14,12 @@ var usersRouter = require('./routes/users');
 var app = express();
 const bitrix = new Bitrix();
 
+let state = {
+  orderNumber: null,
+  city: null,
+  product: null
+};
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -58,20 +64,30 @@ app.use(async (req, res, next) => {
             req.body["auth"],
           );
         }
-        //236654 Ижевск Иван Святогоров сублимационная футболка
-        //TODO handle null result 
-        const orderNumber = message.match(/^\d{3}\s?\d{3}(?=\s)/gm)[0];
-        //TODO handle false result 
-        const city = findCity(message);
-        console.log('Recognized order number: ', orderNumber);
-        console.log('Recognized city: ', city);
-        let regex = new RegExp(`(?<=${city}).*$`, "gm");
-        const messageManagerAndProductStr = message.match(regex)[0];
-        const managerStr = messageManagerAndProductStr.trim().match(/^\S*\s*\S*/gm)[0];
-        console.log('Recognized manager: ', managerStr);
-        regex = new RegExp(`(?<=${managerStr}).*`, "gm");
-        const product = messageManagerAndProductStr.trim().match(regex)[0].trim();
-        console.log('Recognized product: ', product);
+        if(message && message !== "") {
+          //236654 Ижевск Иван Святогоров сублимационная футболка
+          //TODO handle null result 
+          const orderNumber = message.match(/^\d{3}\s?\d{3}(?=\s)/gm)[0];
+          //TODO handle false result 
+          const city = findCity(message);
+          console.log('Recognized order number: ', orderNumber);
+          console.log('Recognized city: ', city);
+          let regex = new RegExp(`(?<=${city}).*$`, "gm");
+          //TODO handle null result and errors
+          const messageManagerAndProductStr = message.match(regex)[0];
+          //TODO handle null result and errors
+          const managerStr = messageManagerAndProductStr.trim().match(/^\S*\s*\S*/gm)[0].trim();
+          console.log('Recognized manager: ', managerStr);
+          regex = new RegExp(`(?<=${managerStr}).*`, "gm");
+          //TODO handle null result and errors
+          const product = messageManagerAndProductStr.trim().match(regex)[0].trim();
+          console.log('Recognized product: ', product);
+          state = { orderNumber, city, product };
+          console.log("New state: ", state);
+        }
+        if(req.body["data"]["PARAMS"]["FILES"]) {
+          
+        }
         break;
       default:
         break;

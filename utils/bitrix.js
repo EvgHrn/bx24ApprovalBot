@@ -61,6 +61,25 @@ class Bitrix {
     }
   };
 
+  saveApproveFiles = async (fileId, auth) => {
+    const result = await this.restCommand(
+      "disk.file.copyto",
+      {
+        // id: Object.keys(req.body["data"]["PARAMS"]["FILES"])[0],
+        id: fileId,
+        targetFolderId: 236942,
+      },
+      auth
+    );
+    if (result) {
+      console.log("Saving file result: ", result);
+      return result;
+    } else {
+      console.log("Saving file error");
+      return false;
+    }
+  };
+
   registerBotAndCommands = async (name, birthday, token, auth) => {
     let result = await this.restCommand(
       "imbot.register",
