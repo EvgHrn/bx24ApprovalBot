@@ -91,7 +91,7 @@ app.use(async (req, res, next) => {
         let attach = [];
         if(req.body["data"]["PARAMS"]["FILES"]) {
           const filesKeys = Object.keys(req.body["data"]["PARAMS"]["FILES"]);
-          filesKeys.map((fileKey) => {
+          filesKeys.map(async(fileKey) => {
             //Save files to disk
             result = await bitrix.saveApproveFiles(req.body["data"]["PARAMS"]["FILES"][fileKey]["id"], req.body["auth"]);
             //Parse result
