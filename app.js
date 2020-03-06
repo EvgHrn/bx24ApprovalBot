@@ -97,15 +97,13 @@ app.use(async (req, res, next) => {
             //Parse result
             const fileUrl = result["result"]["DOWNLOAD_URL"];
             const fileName = result["result"]["NAME"];
-            const fileSize = req.body["data"]["PARAMS"]["FILES"][fileKey]["size"];
             console.log("File url: ", fileUrl);
             console.log("File name: ", fileName);
             console.log("File size: ", fileSize);
             //Add file to attach
-            attach.push({ FILE: {
+            attach.push({ IMAGE: {
               NAME: fileName,
-              LINK: fileUrl,
-              SIZE: fileSize,
+              LINK: fileUrl
             }});
             //Send message with files to manager
             result = await bitrix.sendMessage(
