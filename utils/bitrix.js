@@ -223,11 +223,11 @@ class Bitrix {
       auth
     );
     console.log("findUserByFullName result1: ", resultArr);
-    if(!("result" in result)) {
+    if(!("result" in resultArr)) {
       console.log("findUserByFullName: getting user list 1 error");
       return false;
     }
-    resultArr = resultArr.filter((userObj) => userObj["first_name"] === word2 || userObj["last_name"] === word2);
+    resultArr = resultArr["result"].filter((userObj) => userObj["first_name"] === word2 || userObj["last_name"] === word2);
     if(resultArr.length !== 1) {
       console.log("findUserByFullName: getting user list 2 error");
       return false;
