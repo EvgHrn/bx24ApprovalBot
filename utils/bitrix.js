@@ -56,7 +56,7 @@ class Bitrix {
     return result["result"]["DOWNLOAD_URL"];
   };
 
-  sendMessage = async (userId, msg, auth) => {
+  sendMessage = async (userId, msg, auth, attach = []) => {
     const result = await this.restCommand(
       "imbot.message.add",
       {
@@ -64,6 +64,7 @@ class Bitrix {
         MESSAGE: msg,
       },
       auth,
+      attach
     );
     if (result) {
       console.log("Sending message result: ", result);
@@ -250,11 +251,12 @@ class Bitrix {
 		return result;
 	}
 
-  restCommand = async (method, params = {}, auth = {}, authRefresh = true) => {
+  restCommand = async (method, params = {}, auth = {}, attach = [], authRefresh = true) => {
     const queryUrl = `${auth["client_endpoint"]}${method}`;
     const queryData = querystring.stringify({
       ...params,
       auth: auth["access_token"],
+      attach
     });
 
     let result;
@@ -274,7 +276,7 @@ class Bitrix {
     ) {
       auth = await this.restAuth(auth);
       if (auth) {
-        result = await this.restCommand(method, params, auth, false);
+        result = await this.restCommand(method, params, auth, attach, false);
         console.log("restCommand response w/o auth: ", result);
       }
     }
