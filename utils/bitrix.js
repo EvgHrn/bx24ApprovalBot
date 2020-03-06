@@ -222,6 +222,7 @@ class Bitrix {
       { 'FIND': word1 },
       auth
     );
+    console.log("findUserByFullName result: ", result);
     if(!("result" in result)) {
       console.log("findUserByFullName: getting user list error");
       return false;
