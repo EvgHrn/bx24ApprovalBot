@@ -53,7 +53,7 @@ class Bitrix {
       },
       auth
     );
-    return result["result"]["DOWNLOAD_URL"];
+    return result["result"]["DETAIL_URL"];
   };
 
   sendMessage = async (userId, msg, auth, attach = []) => {
