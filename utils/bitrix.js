@@ -216,7 +216,7 @@ class Bitrix {
     }
     const word1 = wordsArr[0];
     const word2 = wordsArr[1];
-    let result;
+    let resultArr;
     resultArr = await this.restCommand(
       'im.search.user.list',
       { 'FIND': word1 },
@@ -258,7 +258,6 @@ class Bitrix {
 
     let result;
     try {
-      console.log("restCommand URL: ", `${queryUrl}/?${queryData}`);
       const response = await fetch(`${queryUrl}/?${queryData}`);
       result = await response.json();
       console.log("restCommand response: ", result);
