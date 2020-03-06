@@ -216,19 +216,23 @@ class Bitrix {
     }
     const word1 = wordsArr[0];
     const word2 = wordsArr[1];
-    console.log("word1: ", word1);
-    console.log("word2: ", word2);
     let result;
-    result = await this.restCommand(
+    resultArr = await this.restCommand(
       'im.search.user.list',
       { 'FIND': word1 },
       auth
     );
-    console.log("findUserByFullName result: ", result);
+    console.log("findUserByFullName result1: ", resultArr);
     if(!("result" in result)) {
-      console.log("findUserByFullName: getting user list error");
+      console.log("findUserByFullName: getting user list 1 error");
       return false;
     }
+    resultArr = resultArr.filter((userObj) => userObj["first_name"] === word2 || userObj["last_name"] === word2);
+    if(resultArr.length !== 1) {
+      console.log("findUserByFullName: getting user list 2 error");
+      return false;
+    }
+    return resultArr[0];
   };
 	
 	commandAnswer = async (commandId, commandMsg, msg, attach, auth) => {
@@ -254,6 +258,7 @@ class Bitrix {
 
     let result;
     try {
+      console.log("restCommand URL: ", `${queryUrl}/?${queryData}`);
       const response = await fetch(`${queryUrl}/?${queryData}`);
       result = await response.json();
       console.log("restCommand response: ", result);
