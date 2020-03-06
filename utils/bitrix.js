@@ -216,8 +216,7 @@ class Bitrix {
     }
     const word1 = wordsArr[0];
     const word2 = wordsArr[1];
-    let resultArr;
-    resultArr = await this.restCommand(
+    const resultArr = await this.restCommand(
       'im.search.user.list',
       { 'FIND': word1 },
       auth
@@ -227,12 +226,12 @@ class Bitrix {
       console.log("findUserByFullName: getting user list 1 error");
       return false;
     }
-    resultArr = resultArr["result"].filter((userObj) => userObj["first_name"] === word2 || userObj["last_name"] === word2);
-    if(resultArr.length !== 1) {
+    const resultKeysArr = Object.keys(resultArr["result"]).filter((userKey) => resultArr[userKey]["first_name"] === word2 || resultArr[userKey]["last_name"] === word2);
+    if(resultKeysArr.length !== 1) {
       console.log("findUserByFullName: getting user list 2 error");
       return false;
     }
-    return resultArr[0];
+    return resultArr["result"][resultKeysArr[0]]["id"];
   };
 	
 	commandAnswer = async (commandId, commandMsg, msg, attach, auth) => {
