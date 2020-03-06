@@ -208,7 +208,7 @@ class Bitrix {
     return result.result;
   };
   
-  findUserByFullName = (userStr, auth) => {
+  findUserByFullName = async (userStr, auth) => {
     const wordsArr = userStr.split(" ");
     if(wordsArr.length !== 2) {
       console.log("findUserByFullName: array length error");
