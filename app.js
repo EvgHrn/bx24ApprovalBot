@@ -78,7 +78,7 @@ app.use(async (req, res, next) => {
           const messageManagerAndProductStr = message.match(regex)[0];
           //TODO handle null result and errors
           const managerStr = messageManagerAndProductStr.trim().match(/^\S*\s*\S*/gm)[0].trim();
-          const managerId = bitrix.findUserByFullName(managerStr, req.body["auth"]);
+          const managerId = await bitrix.findUserByFullName(managerStr, req.body["auth"]);
           console.log('Recognized manager: ', managerStr);
           regex = new RegExp(`(?<=${managerStr}).*`, "gm");
           //TODO handle null result and errors
