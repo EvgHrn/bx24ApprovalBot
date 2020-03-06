@@ -217,7 +217,7 @@ class Bitrix {
     const word1 = wordsArr[0];
     const word2 = wordsArr[1];
     let result;
-    result = this.restCommand(
+    result = await this.restCommand(
       'im.search.user.list',
       { 'FIND': word1 },
       auth
