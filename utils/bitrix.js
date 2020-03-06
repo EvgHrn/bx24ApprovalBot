@@ -45,6 +45,17 @@ class Bitrix {
     }
   };
 
+  getFileUrl = async (fileId, auth) => {
+    const result = await this.restCommand(
+      "disk.file.get",
+      {
+        id: fileId
+      },
+      auth
+    );
+    return result["result"]["DOWNLOAD_URL"];
+  };
+
   sendMessage = async (userId, msg, auth) => {
     const result = await this.restCommand(
       "imbot.message.add",
@@ -195,7 +206,27 @@ class Bitrix {
       auth
     );
     return result.result;
-	};
+  };
+  
+  findUserByFullName = (userStr, auth) => {
+    const wordsArr = userStr.split(" ");
+    if(wordsArr.length !== 2) {
+      console.log("findUserByFullName: array length error");
+      return false;
+    }
+    const word1 = wordsArr[0];
+    const word2 = wordsArr[1];
+    let result;
+    result = this.restCommand(
+      'im.search.user.list',
+      { 'FIND': word1 },
+      auth
+    );
+    if(!("result" in result)) {
+      console.log("findUserByFullName: getting user list error");
+      return false;
+    }
+  };
 	
 	commandAnswer = async (commandId, commandMsg, msg, attach, auth) => {
 		const result = await this.restCommand(

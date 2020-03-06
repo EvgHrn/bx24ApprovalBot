@@ -15,6 +15,7 @@ var app = express();
 const bitrix = new Bitrix();
 
 let state = {
+  managerId: null,
   orderNumber: null,
   city: null,
   product: null
@@ -77,16 +78,43 @@ app.use(async (req, res, next) => {
           const messageManagerAndProductStr = message.match(regex)[0];
           //TODO handle null result and errors
           const managerStr = messageManagerAndProductStr.trim().match(/^\S*\s*\S*/gm)[0].trim();
+          const managerId = bitrix.findUserByFullName(managerStr);
           console.log('Recognized manager: ', managerStr);
           regex = new RegExp(`(?<=${managerStr}).*`, "gm");
           //TODO handle null result and errors
           const product = messageManagerAndProductStr.trim().match(regex)[0].trim();
           console.log('Recognized product: ', product);
-          state = { orderNumber, city, product };
+          state = { orderNumber, city, product, managerId };
           console.log("New state: ", state);
+          break;
         }
+        let attach = [];
         if(req.body["data"]["PARAMS"]["FILES"]) {
-          
+          const filesKeys = Object.keys(req.body["data"]["PARAMS"]["FILES"]);
+          filesKeys.map((fileKey) => {
+            //Save files to disk
+            result = await bitrix.saveApproveFiles(req.body["data"]["PARAMS"]["FILES"][fileKey]["id"], req.body["auth"]);
+            //Parse result
+            const fileUrl = result["result"]["DOWNLOAD_URL"];
+            const fileName = result["result"]["NAME"];
+            const fileSize = req.body["data"]["PARAMS"]["FILES"][fileKey]["size"];
+            console.log("File url: ", fileUrl);
+            console.log("File name: ", fileName);
+            console.log("File size: ", fileSize);
+            //Add file to attach
+            attach.push({ FILE: {
+              NAME: fileName,
+              LINK: fileUrl,
+              SIZE: fileSize,
+            }});
+            //Send message with files to manager
+            result = await bitrix.sendMessage(
+              state.managerId,
+              `${req.body["data"]["USER"]["NAME"]} id${req.body["data"]["USER"]["ID"]}: ${state.orderNumber}`,
+              req.body["auth"],
+              attach
+            );
+          });
         }
         break;
       default:
