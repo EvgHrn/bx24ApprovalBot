@@ -216,6 +216,8 @@ class Bitrix {
     }
     const word1 = wordsArr[0];
     const word2 = wordsArr[1];
+    console.log("word1: ", word1);
+    console.log("word2: ", word2);
     let result;
     result = await this.restCommand(
       'im.search.user.list',
