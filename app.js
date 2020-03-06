@@ -99,7 +99,6 @@ app.use(async (req, res, next) => {
             const fileName = result["result"]["NAME"];
             console.log("File url: ", fileUrl);
             console.log("File name: ", fileName);
-            console.log("File size: ", fileSize);
             //Add file to attach
             attach.push({ IMAGE: {
               NAME: fileName,
