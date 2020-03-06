@@ -227,8 +227,7 @@ class Bitrix {
       return false;
     }
     const resultKeysArr = Object.keys(resultArr["result"]).filter((userKey) => {
-      console.log("resultArr[userKey]", resultArr[userKey]);
-      return (resultArr[userKey]["first_name"] === word2 || resultArr[userKey]["last_name"] === word2)
+      return (resultArr["result"][userKey]["first_name"] === word2 || resultArr["result"][userKey]["last_name"] === word2)
     });
     if(resultKeysArr.length !== 1) {
       console.log("findUserByFullName: getting user list 2 error");
