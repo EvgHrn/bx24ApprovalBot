@@ -1,17 +1,13 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
 const bodyParser = require("body-parser");
-// const countryDetector = require("country-in-text-detector");
 const Bitrix = require('./utils/bitrix');
 const cityArr = require('./utils/city');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-
-var app = express();
+const app = express();
 const bitrix = new Bitrix();
 
 let state = {
@@ -93,7 +89,11 @@ app.use(async (req, res, next) => {
           const filesKeys = Object.keys(req.body["data"]["PARAMS"]["FILES"]);
           filesKeys.map(async(fileKey) => {
             //Save files to disk
-            result = await bitrix.saveApproveFiles(req.body["data"]["PARAMS"]["FILES"][fileKey]["id"], req.body["auth"]);
+            result = await bitrix.saveApproveFiles(req.body["data"]["PARAMS"]["FILES"][fileKey]["id"],
+                state.city,
+                state.orderNumber,
+                state.product,
+                req.body["auth"]);
             //Parse result
             const fileUrl = result["result"]["DOWNLOAD_URL"];
             const fileName = result["result"]["NAME"];
@@ -149,6 +149,6 @@ const findCity = (str) => {
   } else {
     return false;
   }
-}
+};
 
 module.exports = app;

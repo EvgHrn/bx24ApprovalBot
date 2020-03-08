@@ -73,17 +73,94 @@ class Bitrix {
     }
   };
 
-  saveApproveFiles = async (fileId, auth) => {
-    const result = await this.restCommand(
-      "disk.file.copyto",
+  saveApproveFiles = async (fileId, city, orderNumber, product, auth) => {
+
+    //Get city folders
+    let cityFoldersArr = await this.restCommand(
+      "disk.folder.getchildren",
       {
-        // id: Object.keys(req.body["data"]["PARAMS"]["FILES"])[0],
-        id: fileId,
-        targetFolderId: 236942,
+        id: 236942
       },
       auth
     );
-    if (result) {
+    cityFoldersArr = cityFoldersArr["result"];
+
+    //Check if city folder exist
+    const isCityFolderExist = cityFoldersArr.some((cityFolderObj) => cityFolderObj["NAME"] === city);
+
+    //Getting city folder id
+    let cityFolderId;
+    if(isCityFolderExist) {
+      cityFolderId = cityFoldersArr.find((cityFolderObj) => cityFolderObj["NAME"] === city)["ID"];
+    } else {
+      //Create city folder
+      const cityFolderIdResult = await this.restCommand(
+        "disk.folder.addsubfolder",
+        {
+          id: 236942,
+          data: {
+            NAME: city
+          }
+        },
+        auth
+      );
+      cityFolderId = cityFolderIdResult["result"]["ID"];
+    }
+
+    //Getting order folder id
+    let orderFolderId = 236942;
+    if(!isCityFolderExist){
+      const orderFolderIdResponse = await this.restCommand(
+        "disk.folder.addsubfolder",
+        {
+          id: cityFolderId,
+          data: {
+            NAME: `${orderNumber} ${product}`
+          }
+        },
+        auth
+      );
+      orderFolderId = orderFolderIdResponse["result"]["ID"];
+    } else {
+      //Check if order folder exist
+      const ordersFoldersArrResponse =  await this.restCommand(
+        "disk.folder.getchildren",
+        {
+          id: cityFolderId
+        },
+        auth
+      );
+      const ordersFoldersArr = ordersFoldersArrResponse["result"];
+      const isOrderFolderExist = ordersFoldersArr.some((orderFolderObj) => orderFolderObj["NAME"] ===  `${orderNumber} ${product}`);
+      if(!isOrderFolderExist) {
+        //Create order folder
+        const orderFolderIdResponse = await this.restCommand(
+          "disk.folder.addsubfolder",
+          {
+            id: cityFolderId,
+            data: {
+              NAME: `${orderNumber} ${product}`
+            }
+          },
+          auth
+        );
+        orderFolderId = orderFolderIdResponse["result"]["ID"];
+      } else {
+        //Getting existing order folder id
+        orderFolderId = ordersFoldersArr.find((orderFolderObj) => orderFolderObj["NAME"] ===  `${orderNumber} ${product}`)["ID"];
+      }
+    }
+
+    //Save files
+    const result = await this.restCommand(
+      "disk.file.copyto",
+      {
+        id: fileId,
+        targetFolderId: orderFolderId,
+      },
+      auth
+    );
+    if (result["result"]) {
       console.log("Saving file result: ", result);
       return result;
     } else {
