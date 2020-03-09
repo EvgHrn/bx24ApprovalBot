@@ -95,7 +95,7 @@ app.use(async (req, res, next) => {
                 state.product,
                 req.body["auth"]);
             //Parse result
-            const fileUrl = result["result"]["DOWNLOAD_URL"];
+            const fileUrl = result["result"]["DETAIL_URL"];
             const fileName = result["result"]["NAME"];
             console.log("File url: ", fileUrl);
             console.log("File name: ", fileName);
