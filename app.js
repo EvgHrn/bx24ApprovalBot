@@ -86,6 +86,7 @@ app.use(async (req, res, next) => {
         }
         let attach = [];
         if(req.body["data"]["PARAMS"]["FILES"]) {
+          console.log("There are files in message: ", req.body["data"]["PARAMS"]["FILES"]);
           const filesKeys = Object.keys(req.body["data"]["PARAMS"]["FILES"]);
           filesKeys.map(async(fileKey) => {
             //Save files to disk
