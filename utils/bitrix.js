@@ -270,9 +270,9 @@ class Bitrix {
     Db.saveConfig(newConfig);
   };
 
-	checkAuth = token => {
-		const configs = Db.getConfigs();
-		console.log("Got new configs: ", configs);
+  checkAuth = token => {
+    const configs = Db.getConfigs();
+    console.log("Got new configs: ", configs);
     return configs.find(configObj => Object.keys(configObj).includes(token));
   };
 
@@ -314,19 +314,19 @@ class Bitrix {
     return resultArr["result"][resultKeysArr[0]]["id"];
   };
 	
-	commandAnswer = async (commandId, commandMsg, msg, attach, auth) => {
-		const result = await this.restCommand(
-      "imbot.command.answer",
-      {
-        COMMAND_ID: commandId,
-        MESSAGE_ID: commandMsg,
-        MESSAGE: msg,
-        ATTACH: attach,
-      },
-      auth
-    );
-		return result;
-	}
+  commandAnswer = async (commandId, commandMsg, msg, attach, auth) => {
+      const result = await this.restCommand(
+    "imbot.command.answer",
+    {
+      COMMAND_ID: commandId,
+      MESSAGE_ID: commandMsg,
+      MESSAGE: msg,
+      ATTACH: attach,
+    },
+    auth
+  );
+      return result;
+  }
 
   restCommand = async (method, params = {}, auth = {}, attach = [], authRefresh = true) => {
     const queryUrl = `${auth["client_endpoint"]}${method}`;
