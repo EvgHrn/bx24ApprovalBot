@@ -113,7 +113,7 @@ app.use(async (req, res, next) => {
                 req.body["auth"]);
             console.log("Chat Folder Children: ", chatFolderChildren);
             const fileId = fileKey;
-            const fileVersion = await bitrix.getFileVersion(fileId);
+            const fileVersion = await bitrix.getFileVersion(fileId, req.body["auth"]);
             console.log("File version: ", fileId, fileVersion);
             if(fileVersion > 1) {
               console.log("Saving file...");
