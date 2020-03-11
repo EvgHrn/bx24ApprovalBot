@@ -104,6 +104,14 @@ app.use(async (req, res, next) => {
                 },
                 req.body["auth"]);
             console.log("Chat folder info: ", getFolderInfoResult);
+            const chatFolderId = getFolderInfoResult["result"]["ID"];
+            const chatFolderChildren = await bitrix.restCommand(
+                "disk.folder.getchildren",
+                {
+                  id: chatFolderId
+                },
+                req.body["auth"]);
+            console.log("Chat Folder Children: ", chatFolderChildren);
             result = await bitrix.saveApproveFiles(req.body["data"]["PARAMS"]["FILES"][fileKey]["id"],
                 state.city,
                 state.orderNumber,
