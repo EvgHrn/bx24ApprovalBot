@@ -340,7 +340,7 @@ class Bitrix {
     try {
       const response = await fetch(`${queryUrl}/?${queryData}`);
       result = await response.json();
-      console.log("restCommand response: ", result);
+      // console.log("restCommand response: ", result);
     } catch (err) {
       console.log("restCommand fetch error: ", err);
       return false;

@@ -112,28 +112,35 @@ app.use(async (req, res, next) => {
                 },
                 req.body["auth"]);
             console.log("Chat Folder Children: ", chatFolderChildren);
-            result = await bitrix.saveApproveFiles(req.body["data"]["PARAMS"]["FILES"][fileKey]["id"],
-                state.city,
-                state.orderNumber,
-                state.product,
+            const fileInfo = await bitrix.restCommand(
+                "disk.file.get",
+                {
+                  id: fileKey
+                },
                 req.body["auth"]);
-            //Parse result
-            const fileUrl = result["result"]["DETAIL_URL"];
-            const fileName = result["result"]["NAME"];
-            console.log("File url: ", fileUrl);
-            console.log("File name: ", fileName);
-            //Add file to attach
-            attach.push({ IMAGE: {
-              NAME: fileName,
-              LINK: fileUrl
-            }});
-            //Send message with files to manager
-            result = await bitrix.sendMessage(
-              state.managerId,
-              `${req.body["data"]["USER"]["NAME"]} id${req.body["data"]["USER"]["ID"]}: ${state.orderNumber}`,
-              req.body["auth"],
-              attach
-            );
+            console.log("File info: ", fileInfo);
+            // result = await bitrix.saveApproveFiles(req.body["data"]["PARAMS"]["FILES"][fileKey]["id"],
+            //     state.city,
+            //     state.orderNumber,
+            //     state.product,
+            //     req.body["auth"]);
+            // //Parse result
+            // const fileUrl = result["result"]["DETAIL_URL"];
+            // const fileName = result["result"]["NAME"];
+            // console.log("File url: ", fileUrl);
+            // console.log("File name: ", fileName);
+            // //Add file to attach
+            // attach.push({ IMAGE: {
+            //   NAME: fileName,
+            //   LINK: fileUrl
+            // }});
+            // //Send message with files to manager
+            // result = await bitrix.sendMessage(
+            //   state.managerId,
+            //   `${req.body["data"]["USER"]["NAME"]} id${req.body["data"]["USER"]["ID"]}: ${state.orderNumber}`,
+            //   req.body["auth"],
+            //   attach
+            // );
           });
         }
         break;
