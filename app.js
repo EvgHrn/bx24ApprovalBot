@@ -90,20 +90,20 @@ app.use(async (req, res, next) => {
           const filesKeys = Object.keys(req.body["data"]["PARAMS"]["FILES"]);
           filesKeys.map(async(fileKey) => {
             //Save files to disk
-            let getFolderInfoResult = await bitrix.restCommand(
+            const getFolderIdResult = await bitrix.restCommand(
                 "im.disk.folder.get",
                 {
                   CHAT_ID: req.body["data"]["PARAMS"]["CHAT_ID"]
                 },
                 req.body["auth"]);
-            console.log("Chat folder id: ", getFolderInfoResult);
-            getFolderInfoResult = await bitrix.restCommand(
+            console.log("Chat folder id: ", getFolderIdResult);
+            const getFolderInfoResult = await bitrix.restCommand(
                 "disk.folder.get",
                 {
-                  id: getFolderInfoResult["result"]["ID"]
+                  id: getFolderIdResult["result"]["ID"]
                 },
                 req.body["auth"]);
-            console.log("Cat folder info: ", getFolderInfoResult);
+            console.log("Chat folder info: ", getFolderInfoResult);
             result = await bitrix.saveApproveFiles(req.body["data"]["PARAMS"]["FILES"][fileKey]["id"],
                 state.city,
                 state.orderNumber,
