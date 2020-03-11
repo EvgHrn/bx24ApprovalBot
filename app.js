@@ -113,25 +113,30 @@ app.use(async (req, res, next) => {
                 req.body["auth"]);
             console.log("Chat Folder Children: ", chatFolderChildren);
             const fileId = fileKey;
-            const fileVersion = await bitrix.getFileVersion(fileId, req.body["auth"]);
-            console.log("File version: ", fileId, fileVersion);
-            if(fileVersion > 1) {
-              console.log("Saving file...");
-              const savingFileResult = await bitrix.saveApproveFiles(
-                fileId,
-                state.city,
-                state.orderNumber,
-                state.product,
-                req.body["auth"]
-              );
-              if(savingFileResult) {
-                console.log("Saving file result: ", savingFileResult);
+            let fileVersion;
+            setTimeout(async function checkFileVersionTimer() {
+              fileVersion = await bitrix.getFileVersion(fileId, req.body["auth"]);
+              console.log("File version: ", fileId, fileVersion);
+              if(fileVersion > 1) {
+                console.log("Saving file...");
+                const savingFileResult = await bitrix.saveApproveFiles(
+                  fileId,
+                  state.city,
+                  state.orderNumber,
+                  state.product,
+                  req.body["auth"]
+                );
+                if(savingFileResult) {
+                  console.log("Saving file result: ", savingFileResult);
+                } else {
+                  console.log("Saving file error");
+                }
               } else {
-                console.log("Saving file error");
+                console.log("File do not downloaded yet");
+                setTimeout(checkFileVersionTimer, 2000);
               }
-            } else {
-              console.log("File do not downloaded yet");
-            }
+            }, 2000);
+
             // result = await bitrix.saveApproveFiles(req.body["data"]["PARAMS"]["FILES"][fileKey]["id"],
             //     state.city,
             //     state.orderNumber,
