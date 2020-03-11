@@ -73,6 +73,20 @@ class Bitrix {
     }
   };
 
+  getFileVersion = async (fileId, auth) => {
+    const fileInfo = await this.restCommand(
+      "disk.file.get",
+      {
+        id: fileId
+      },
+      auth);
+    if("result" in fileInfo) {
+      return fileInfo["result"]["GLOBAL_CONTENT_VERSION"];
+    } else {
+      return false;
+    }
+  }
+
   saveApproveFiles = async (fileId, city, orderNumber, product, auth) => {
 
     //Get city folders
@@ -160,11 +174,10 @@ class Bitrix {
       },
       auth
     );
-    if (result["result"]) {
-      console.log("Saving file result: ", result);
+    if ("result" in result) {
+      // console.log("Saving file result: ", result);
       return result;
     } else {
-      console.log("Saving file error");
       return false;
     }
   };
